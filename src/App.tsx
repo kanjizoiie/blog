@@ -1,10 +1,10 @@
 import React from 'react';
 
 const App = () => (
-  <section>
+  <div>
     <h3>Hello, world!</h3>
     <p>This will be a small blog that i will update regularly.</p>
-  </section>
+  </div>
 );
 
 export default App;
