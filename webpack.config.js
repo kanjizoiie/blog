@@ -8,7 +8,6 @@ module.exports = {
   entry: './src/index.tsx',
   mode: 'development',
   experiments: {
-    asset: true,
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
