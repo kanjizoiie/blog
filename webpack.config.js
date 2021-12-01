@@ -84,7 +84,7 @@ module.exports = {
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'train.io',
+      title: 'Blog',
       inject: true,
       template: path.join(__dirname, 'public/index.html'),
     }),
