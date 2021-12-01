@@ -1,0 +1,37 @@
+@import "styles/color";
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+* {
+  font-family: "IBM Plex Sans", "Roboto", "Verdana", "Geneva", "Tahoma",
+    "sans-serif";
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.noborder {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.nomargin {
+  margin: 0 !important;
+}
+
+.fill {
+  height: 100% !important;
+}
+
+.center-container {
+  display: flex;
+}
+
+.center {
+  margin: auto;
+}
