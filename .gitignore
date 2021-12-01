@@ -2,3 +2,6 @@
 # ******FOLDERS******
 node_modules/
 build/
+
+# ******FILES******
+payload-license
