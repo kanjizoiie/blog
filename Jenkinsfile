@@ -15,18 +15,15 @@ node {
     }
   }
 
-  stage('Building') {
-    if (env.BRANCH_NAME == 'main') {
-      stage('Build') {
-        echo 'Building application'
-        docker.build("blog:${env.BUILD_ID}")
-      }
-      stage('Deploy') {
-        echo 'Deploying'
-      }
-    } else {
-      echo 'I execute elsewhere'
+  if (env.BRANCH_NAME == 'main') {
+    stage('Build') {
+      echo 'Building application'
+      docker.build("blog:${env.BUILD_ID}")
     }
+    stage('Deploy') {
+      echo 'Deploying'
+    }
+  } else {
+    echo 'I execute elsewhere'
   }
-
 }
