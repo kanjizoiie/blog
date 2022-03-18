@@ -39,7 +39,7 @@ node {
     }
     stage('Deploy') {
       echo 'Deploying'
-      docker.run("blog:${env.BUILD_ID}")
+      sj "docker run blog:${env.BUILD_ID}"
     }
   } else {
     echo 'I execute elsewhere'
