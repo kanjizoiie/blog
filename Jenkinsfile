@@ -1,13 +1,5 @@
 node {
   withDockerContainer(image: 'node:16.13.1-alpine'){
-    stage('Example') {
-      if (env.BRANCH_NAME == 'master') {
-        echo 'I only execute on the master branch'
-      } else {
-        echo 'I execute elsewhere'
-      }
-    }
-
     stage('Setup') {
       echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
     }
@@ -22,11 +14,19 @@ node {
       sh 'npm test'
     }
   }
-  stage('Build') {
-    echo 'Building application'
-    docker.build("blog:${env.BUILD_ID}")
+
+  stage('Building') {
+    if (env.BRANCH_NAME == 'main') {
+      stage('Build') {
+        echo 'Building application'
+        docker.build("blog:${env.BUILD_ID}")
+      }
+      stage('Deploy') {
+        echo 'Deploying'
+      }
+    } else {
+      echo 'I execute elsewhere'
+    }
   }
-  stage('Deploy') {
-    echo 'Deploying'
-  }
+
 }
