@@ -4,20 +4,30 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building'
-            }
+        stage('Setup') {
+          steps {
+            echo 'Setup'
+          }
+        }
+        stage('Install') {
+          steps {
+            echo 'Installing'
+          }
         }
         stage('Test') {
-            steps {
-                echo 'Testing'
-            }
+          steps {
+            echo 'Testing'
+          }
+        }
+        stage('Build Docker Image') {
+          steps {
+            echo 'Building Docker Image'
+          }
         }
         stage('Deploy') {
-            steps {
-                echo 'Deploying'
-            }
+          steps {
+            echo 'Deploying'
+          }
         }
     }
 }
