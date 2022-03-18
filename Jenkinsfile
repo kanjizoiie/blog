@@ -42,6 +42,5 @@ node {
     }
   } else {
     echo 'I execute elsewhere'
-
   }
 }
