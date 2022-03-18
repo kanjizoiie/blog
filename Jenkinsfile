@@ -28,7 +28,7 @@ pipeline {
       stage('Build') {
         steps {
           echo 'Building application'
-          def customImage = docker.build("my-image:${env.BUILD_ID}")
+          docker.build("my-image:${env.BUILD_ID}")
         }
       }
       stage('Deploy') {
