@@ -1,7 +1,3 @@
-options {
-    skipStagesAfterUnstable()
-}
-
 node {
   withDockerContainer(image: 'node:16.13.1-alpine'){
     stage('Example') {
