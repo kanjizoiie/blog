@@ -1,5 +1,4 @@
 node {
-
   checkout([
     $class: 'GitSCM', 
     branches: [[name: '**']], 
@@ -39,8 +38,10 @@ node {
     }
     stage('Deploy') {
       echo 'Deploying'
+      sh "docker-compose up"
     }
   } else {
     echo 'I execute elsewhere'
+
   }
 }
