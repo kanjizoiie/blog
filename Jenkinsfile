@@ -21,12 +21,12 @@ node {
       echo 'Testing application'
       sh 'npm test'
     }
-    stage('Build') {
-      echo 'Building application'
-      docker.build("my-image:${env.BUILD_ID}")
-    }
-    stage('Deploy') {
-      echo 'Deploying'
-    }
+  }
+  stage('Build') {
+    echo 'Building application'
+    docker.build("blog:${env.BUILD_ID}")
+  }
+  stage('Deploy') {
+    echo 'Deploying'
   }
 }
