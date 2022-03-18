@@ -1,5 +1,5 @@
 # Get node image
-FROM node:lts AS development
+FROM node:16.13.1-alpine AS development
 
 # Set working directory
 WORKDIR /app
