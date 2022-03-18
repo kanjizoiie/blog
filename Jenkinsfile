@@ -31,13 +31,15 @@ node {
     }
   }
 
-  if (env.BRANCH_NAME == 'main') {
+  if (true || env.BRANCH_NAME == 'main') {
+    def imageName = "blog:${env.BUILD_ID}"
     stage('Build') {
       echo 'Building application'
       docker.build("blog:${env.BUILD_ID}")
     }
     stage('Deploy') {
       echo 'Deploying'
+      docker.run("blog:${env.BUILD_ID}")
     }
   } else {
     echo 'I execute elsewhere'
