@@ -1,7 +1,11 @@
 node {
-  checkout scm
+  stage('Checkout from SCM') {
+    checkout scm
+  }
+
   withDockerContainer(image: 'node:16.13.1-alpine') {
     stage('Setup') {
+      sh "printenv"
       echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
     }
 
@@ -15,6 +19,7 @@ node {
       sh 'npm test'
     }
   }
+
   docker.withRegistry('http://192.168.10.156:5000') {
     if (true || env.BRANCH_NAME == 'main') {
       def imageName = "blog:${env.BUILD_ID}"
