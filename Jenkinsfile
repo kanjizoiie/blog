@@ -21,15 +21,20 @@ node {
   }
 
   docker.withRegistry('http://192.168.10.156:5000') {
-    if (true || env.BRANCH_NAME == 'main') {
+    if (env.BRANCH_NAME == 'main') {
       def imageName = "blog:${env.BUILD_ID}"
-      stage('Build Image') {
-        echo 'Building application'
-        def image = docker.build("blog:${env.BUILD_ID}")
-        
-        stage('Publish Image') {
-          echo 'Deploying'
+    } else {
+      def imageName = "blog:${env.BUILD_ID}-dev"
+    }
+    stage('Build Image') {
+      echo 'Building application'
+      def image = docker.build(imageName)
+      stage('Publish Image') {
+        echo 'Deploying'
+        if (env.BRANCH_NAME == 'main') {
           image.push('latest')
+        } else {
+          image.push('dev')
         }
       }
     }
