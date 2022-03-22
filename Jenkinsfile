@@ -21,13 +21,13 @@ node {
   }
 
   docker.withRegistry('http://192.168.10.156:5000') {
-    if (env.BRANCH_NAME == 'main') {
-      def imageName = "blog:${env.BUILD_ID}"
-    } else {
-      def imageName = "blog:${env.BUILD_ID}-dev"
+    def imageName = "blog:${env.BUILD_ID}"
+    if (env.BRANCH_NAME != 'main') {
+      def imageName = "blog:${env.BUILD_ID}-${env.BRANCH_NAME}-dev"
     }
+
     stage('Build Image') {
-      echo 'Building application'
+      echo "Building Image ${imageName}"
       def image = docker.build(imageName)
       stage('Publish Image') {
         echo 'Deploying'
