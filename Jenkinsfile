@@ -15,7 +15,7 @@ node {
       sh 'npm test'
     }
   }
-  docker.withRegistry('https://registry.example.com') {
+  docker.withRegistry('http://192.168.10.156:5000') {
     if (true || env.BRANCH_NAME == 'main') {
       def imageName = "blog:${env.BUILD_ID}"
       stage('Build Image') {
