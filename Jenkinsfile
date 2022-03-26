@@ -3,8 +3,6 @@ node {
     checkout scm
   }
 
-  def node = tool 'Node'
-  
   withDockerContainer(image: 'node:16.13.1-alpine') {
     stage('Setup') {
       sh "printenv"
@@ -22,13 +20,15 @@ node {
     }
   }
 
-
-  stage('SonarQube Analysis') {
-    def scannerHome = tool 'SonarScanner';
-    withSonarQubeEnv() {
-      sh "${scannerHome}/bin/sonar-scanner"
+  nodejs(nodeJSInstallationName: 'Node') {
+    stage('SonarQube Analysis') {
+      def scannerHome = tool 'SonarScanner';
+      withSonarQubeEnv() {
+        sh "${scannerHome}/bin/sonar-scanner"
+      }
     }
   }
+
 
 
   docker.withRegistry('http://192.168.10.156:5000') {
