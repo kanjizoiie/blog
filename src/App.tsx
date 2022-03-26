@@ -1,11 +1,15 @@
 import React from 'react';
+import Post from './components/post/Post';
 
-const App = () => (
-  <div>
-    <h3>Hello, world!</h3>
-    <p>This will be a small blog that i will update semi often...</p>
-    <p>Feel free to reach out on any platform you see fit!</p>
-  </div>
-);
+function App() {
+  return (
+    <div className="app-container">
+      <Post />
+      <Post />
+      <Post />
+      <Post />
+    </div>
+  );
+}
 
 export default App;

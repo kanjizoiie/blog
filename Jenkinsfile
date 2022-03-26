@@ -1,22 +1,11 @@
 node {
-  checkout([
-    $class: 'GitSCM', 
-    branches: [[name: '**']], 
-    browser: [
-      $class: 'GithubWeb', 
-      repoUrl: 'https://github.com/kanjizoiie/blog'
-    ], 
-    extensions: [], 
-    userRemoteConfigs: [
-      [
-        credentialsId: '0922dac4-da19-4145-91de-7dc724197670', 
-        url: 'https://github.com/kanjizoiie/blog'
-      ]
-    ]
-  ])
+  stage('Checkout from SCM') {
+    checkout scm
+  }
 
-  withDockerContainer(image: 'node:16.13.1-alpine'){
+  withDockerContainer(image: 'node:16.13.1-alpine') {
     stage('Setup') {
+      sh "printenv"
       echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
     }
 
@@ -31,16 +20,34 @@ node {
     }
   }
 
-  if (env.BRANCH_NAME == 'main') {
-    stage('Build') {
-      echo 'Building application'
-      docker.build("blog:${env.BUILD_ID}")
+  nodejs(nodeJSInstallationName: 'Node') {
+    stage('SonarQube Analysis') {
+      def scannerHome = tool 'SonarScanner';
+      withSonarQubeEnv() {
+        sh "${scannerHome}/bin/sonar-scanner"
+      }
     }
-    stage('Deploy') {
-      echo 'Deploying'
-      sh "docker-compose up"
+  }
+
+
+
+  docker.withRegistry('http://192.168.10.156:5000') {
+    def imageName = "blog:${env.BUILD_ID}"
+    if (env.BRANCH_NAME != 'main') {
+      imageName = "blog:${env.BUILD_ID}-${env.BRANCH_NAME}-dev"
     }
-  } else {
-    echo 'I execute elsewhere'
+
+    stage('Build Image') {
+      echo "Building Image ${imageName}"
+      def image = docker.build(imageName)
+      stage('Publish Image') {
+        echo 'Deploying'
+        if (env.BRANCH_NAME == 'main') {
+          image.push('latest')
+        } else {
+          image.push('dev')
+        }
+      }
+    }
   }
 }
