@@ -4,7 +4,7 @@ import './Post.scss';
 function Post() {
   return (
     <div className="post">
-      <h2>{uniqueId('kan')}</h2>
+      <h2>Post title</h2>
       <div className=".bp4-running-text">
         <p>
           We build products that make people better at their most important
