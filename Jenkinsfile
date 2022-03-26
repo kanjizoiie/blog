@@ -14,17 +14,16 @@ node {
       sh 'npm ci'
     }
 
+    stage('SonarQube Analysis') {
+      def scannerHome = tool 'SonarScanner';
+      withSonarQubeEnv() {
+        sh "${scannerHome}/bin/sonar-scanner"
+      }
+    }
+
     stage('Test') {
       echo 'Testing application'
       sh 'npm test'
-    }
-  }
-
-  
-  stage('SonarQube Analysis') {
-    def scannerHome = tool 'SonarScanner';
-    withSonarQubeEnv() {
-      sh "${scannerHome}/bin/sonar-scanner"
     }
   }
 
