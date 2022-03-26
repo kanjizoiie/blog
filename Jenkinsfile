@@ -2,6 +2,8 @@ node {
   stage('Checkout from SCM') {
     checkout scm
   }
+
+  def node = tool 'Node'
   
   withDockerContainer(image: 'node:16.13.1-alpine') {
     stage('Setup') {
@@ -22,7 +24,6 @@ node {
 
 
   stage('SonarQube Analysis') {
-    def node = tool 'Node'
     def scannerHome = tool 'SonarScanner';
     withSonarQubeEnv() {
       sh "${scannerHome}/bin/sonar-scanner"
