@@ -2,29 +2,29 @@ node {
   stage('Checkout from SCM') {
     checkout scm
   }
+  
+  withDockerContainer(image: 'node:16.13.1-alpine') {
+    stage('Setup') {
+      sh "printenv"
+      echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+    }
 
-  parallel {
-    withDockerContainer(image: 'node:16.13.1-alpine') {
-      stage('Setup') {
-        sh "printenv"
-        echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-      }
+    stage('Install') {
+      echo 'Installing Node Dependencies'
+      sh 'npm ci'
+    }
 
-      stage('Install') {
-        echo 'Installing Node Dependencies'
-        sh 'npm ci'
-      }
+    stage('Test') {
+      echo 'Testing application'
+      sh 'npm test'
+    }
+  }
 
-      stage('Test') {
-        echo 'Testing application'
-        sh 'npm test'
-      }
-    },
-    stage('SonarQube Analysis') {
-      def scannerHome = tool 'SonarScanner';
-      withSonarQubeEnv() {
-        sh "${scannerHome}/bin/sonar-scanner"
-      }
+  
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
     }
   }
 
