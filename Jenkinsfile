@@ -20,18 +20,7 @@ node {
     }
   }
 
-  nodejs(nodeJSInstallationName: 'Node') {
-    stage('SonarQube Analysis') {
-      def scannerHome = tool 'SonarScanner';
-      withSonarQubeEnv() {
-        sh "${scannerHome}/bin/sonar-scanner"
-      }
-    }
-  }
-
-
-
-  docker.withRegistry('http://192.168.10.156:5000') {
+  docker.withRegistry('https://docker.nexus.marjoh.duckdns.org/', "nexus-docker") {
     def imageName = "blog:${env.BUILD_ID}"
     if (env.BRANCH_NAME != 'main') {
       imageName = "blog:${env.BUILD_ID}-${env.BRANCH_NAME}-dev"
