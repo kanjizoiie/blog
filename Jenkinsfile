@@ -21,9 +21,9 @@ node {
   }
 
   docker.withRegistry('https://docker.nexus.marjoh.duckdns.org/', "nexus-docker") {
-    def imageName = "blog:${env.BUILD_ID}"
+    def imageName = "blog-server:${env.BUILD_ID}"
     if (env.BRANCH_NAME != 'main') {
-      imageName = "blog:${env.BUILD_ID}-${env.BRANCH_NAME}-dev"
+      imageName = imageName + "-${env.BRANCH_NAME}-dev"
     }
 
     stage('Build Image') {
