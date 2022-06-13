@@ -1,13 +1,31 @@
 import {
-  Button, ButtonGroup, Center, Heading, useToast, VStack, Text
+  Button, ButtonGroup, Center, Heading, useToast, VStack, Text, Box,
 } from '@chakra-ui/react';
 import React from 'react';
+import axios, { Response } from 'redaxios';
 import Weather from './components/weather/Weather';
+
+interface Datapoint {
+  shorts_weather: boolean
+}
 
 function App() {
   const toast = useToast();
 
+  const [status, setStatus] = React.useState<number>();
+
+  const getStatus = () => {
+    axios.get('http://localhost:3502/api')
+      .then((value: Response<any>) => {
+        setStatus(value.data.status);
+      });
+  };
   const handleYesButton = () => {
+    axios.post('http://localhost:3502/api', {
+      shorts_weather: true,
+    }).then(() => {
+      getStatus();
+    });
     toast({
       title: 'Tack för infon!',
       description: 'Då är det ju bara att dra på dig shortsen då!',
@@ -18,6 +36,11 @@ function App() {
   };
 
   const handleNoButton = () => {
+    axios.post('http://localhost:3502/api', {
+      shorts_weather: false,
+    }).then(() => {
+      getStatus();
+    });
     toast({
       title: 'Tack för infon!',
       description: 'Vill du ha tips för långbyxor?',
@@ -27,6 +50,10 @@ function App() {
     });
   };
 
+  React.useEffect(() => {
+    getStatus();
+  });
+
   return (
     <div className="app-container">
       <Center h="100%">
@@ -35,7 +62,10 @@ function App() {
             Är det shortsväder? 🩳
           </Heading>
           <Text fontSize="2xl">
-            De flesta säger: ✅👍
+            De flesta säger:
+          </Text>
+          <Text fontSize="6xl">
+            {status >= 0 ? '👍' : '👎'}
           </Text>
           <Weather />
           <ButtonGroup>
