@@ -1,37 +1,84 @@
-interface WeatherAPIData {
+import axios, { Response } from 'redaxios';
+
+export interface WeatherAPIData {
   coord: {
     lat: number,
     lng: number
-  }
+  },
+  weather: Array<{
+    id: number,
+    main: string,
+    description: string,
+    icon: string,
+    icon_url: string,
+  }>,
+  base: string,
+  main: {
+    temp: number,
+    feels_like: number,
+    temp_min: number,
+    temp_max: number,
+    pressure: number,
+    humidity: number
+  },
+  visibility: number,
+  wind: {
+    speed: number,
+    deg: number
+  },
+  clouds: {
+    all: number
+  },
+  dt: number,
+  sys: {
+    type: number,
+    id: number,
+    message: number,
+    country: string,
+    sunrise: number,
+    sunset: number
+  },
+  timezone: number,
+  id: number,
+  name: string,
+  cod: number
 }
 
-enum UNITS {
+enum WEATHERAPI_UNITS {
   metric = 'metric',
   standard = 'standard',
   imperial = 'imperial',
 }
 
 export default class WeatherAPI {
+  active: boolean;
+
   APIKey: string;
 
-  units: UNITS;
+  units: WEATHERAPI_UNITS;
 
   baseURL = 'http://api.openweathermap.org/data/2.5';
 
-  constructor(APIKey: string) {
+  iconURL = 'http://openweathermap.org/img/wn/10d@2x.png';
+
+  constructor(APIKey: string, active?: boolean) {
+    this.active = active;
     this.APIKey = APIKey;
-    this.units = UNITS.metric;
+    this.units = WEATHERAPI_UNITS.metric;
   }
 
-  private getApiRequest(api: string, searchParams: object) {
+  private getApiRequest(api: string, searchParams: object): Promise<WeatherAPIData> {
     const sp = new URLSearchParams({
       units: this.units,
       appid: this.APIKey,
       ...searchParams,
     });
-    return fetch(`${this.baseURL}/${api}?${sp}`)
-      .then((result: Response) => result.json())
-      .catch((reason) => console.error(reason));
+    if (this.active) {
+      return axios
+        .get(`${this.baseURL}/${api}?${sp}`)
+        .then((response: Response<WeatherAPIData>) => response.data);
+    }
+    return new Promise((resolve) => { resolve(require('./sample.json')); });
   }
 
   /**

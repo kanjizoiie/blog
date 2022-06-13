@@ -1,14 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import 'normalize.css/normalize.css';
-import '@blueprintjs/icons/lib/css/blueprint-icons.css';
-import '@blueprintjs/core/lib/css/blueprint.css';
+// 1. import `ChakraProvider` component
+import { ChakraProvider } from '@chakra-ui/react';
 
 import './index.scss';
 import App from './App';
 
 ReactDOM.render(
-  <App />,
+  <ChakraProvider>
+    <App />
+  </ChakraProvider>,
   document.getElementById('root'),
 );
