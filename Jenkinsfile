@@ -2,12 +2,25 @@ node {
   stage('Checkout from SCM') {
     checkout scm
   }
+  
+  stage('Setup NPM repo') {
+    withCredentials([
+      string(credentialsId: 'registry', variable: 'TOKEN')
+    ]) {
+      sh 'touch .npmrc'
+      sh "echo '\n//${npmRepo}:_authToken=$TOKEN' >> .npmrc"
+      sh 'cat .npmrc'
+    }
+  }
+
 
   withDockerContainer(image: 'node:16.13.1-alpine') {
     stage('Setup') {
       sh "printenv"
       echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
     }
+
+
 
     stage('Install') {
       echo 'Installing Node Dependencies'
