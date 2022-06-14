@@ -2,12 +2,28 @@ node {
   stage('Checkout from SCM') {
     checkout scm
   }
+  
+
+  npmRepo='nexus.marjoh.duckdns.org/repository/npm-group/';
+
+  stage('Setup NPM repo') {
+    withCredentials([
+      string(credentialsId: 'registry', variable: 'TOKEN')
+    ]) {
+      sh 'touch .npmrc'
+      sh "echo '\n//${npmRepo}:_authToken=$TOKEN' >> .npmrc"
+      sh 'cat .npmrc'
+    }
+  }
+
 
   withDockerContainer(image: 'node:16.13.1-alpine') {
     stage('Setup') {
       sh "printenv"
       echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
     }
+
+
 
     stage('Install') {
       echo 'Installing Node Dependencies'
@@ -20,21 +36,10 @@ node {
     }
   }
 
-  nodejs(nodeJSInstallationName: 'Node') {
-    stage('SonarQube Analysis') {
-      def scannerHome = tool 'SonarScanner';
-      withSonarQubeEnv() {
-        sh "${scannerHome}/bin/sonar-scanner"
-      }
-    }
-  }
-
-
-
-  docker.withRegistry('http://192.168.10.156:5000') {
-    def imageName = "blog:${env.BUILD_ID}"
+  docker.withRegistry('https://docker.nexus.marjoh.duckdns.org/', "nexus-docker") {
+    def imageName = "blog-server:${env.BUILD_ID}"
     if (env.BRANCH_NAME != 'main') {
-      imageName = "blog:${env.BUILD_ID}-${env.BRANCH_NAME}-dev"
+      imageName = imageName + "-${env.BRANCH_NAME}-dev"
     }
 
     stage('Build Image') {
