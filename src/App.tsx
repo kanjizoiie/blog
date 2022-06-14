@@ -5,19 +5,21 @@ import React from 'react';
 import axios, { Response } from 'redaxios';
 import Weather from './components/weather/Weather';
 
+const serverURL = `${process.env.SERVER_HOST}/api`;
+
 function App() {
   const toast = useToast();
 
   const [status, setStatus] = React.useState<number>();
 
   const getStatus = () => {
-    axios.get('http://localhost:3502/api')
+    axios.get(serverURL)
       .then((value: Response<any>) => {
         setStatus(value.data.status);
       });
   };
   const handleYesButton = () => {
-    axios.post('http://localhost:3502/api', {
+    axios.post(serverURL, {
       shorts_weather: true,
     }).then(() => {
       getStatus();
@@ -32,7 +34,7 @@ function App() {
   };
 
   const handleNoButton = () => {
-    axios.post('http://localhost:3502/api', {
+    axios.post(serverURL, {
       shorts_weather: false,
     }).then(() => {
       getStatus();
