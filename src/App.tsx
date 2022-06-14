@@ -5,10 +5,6 @@ import React from 'react';
 import axios, { Response } from 'redaxios';
 import Weather from './components/weather/Weather';
 
-interface Datapoint {
-  shorts_weather: boolean
-}
-
 function App() {
   const toast = useToast();
 
@@ -25,13 +21,13 @@ function App() {
       shorts_weather: true,
     }).then(() => {
       getStatus();
-    });
-    toast({
-      title: 'Tack för infon!',
-      description: 'Då är det ju bara att dra på dig shortsen då!',
-      status: 'success',
-      duration: 9000,
-      isClosable: true,
+      toast({
+        title: 'Tack för infon!',
+        description: 'Då är det ju bara att dra på dig shortsen då!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
     });
   };
 
@@ -40,13 +36,13 @@ function App() {
       shorts_weather: false,
     }).then(() => {
       getStatus();
-    });
-    toast({
-      title: 'Tack för infon!',
-      description: 'Vill du ha tips för långbyxor?',
-      status: 'warning',
-      duration: 9000,
-      isClosable: true,
+      toast({
+        title: 'Tack för infon!',
+        description: 'Vill du ha tips för långbyxor?',
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      });
     });
   };
 
