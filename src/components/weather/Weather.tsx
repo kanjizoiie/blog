@@ -3,14 +3,36 @@ import {
   Stat, StatHelpText, StatLabel, StatNumber,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import WeatherAPI, { WeatherAPIData } from './WeatherAPI';
+import axios, { Response } from 'redaxios';
+import { WeatherAPIData } from './WeatherAPI';
 
-function Weather(props: any) {
+export interface WeatherProps {
+  geocode?: string;
+  position?: Array<number>;
+  onWeatherChange?: (data: WeatherAPIData) => void;
+}
+
+function Weather({ geocode, position, onWeatherChange }: WeatherProps) {
   const [state, setState] = useState<WeatherAPIData>();
-  const api = new WeatherAPI('10456d4dfb4a90729790ada8bf436fd1', false);
-  const weather = api
-    .getWeatherAtGeocode('sundsvall')
-    .then((data) => { setState(data); });
+  const client = axios.create({ baseURL: 'http://localhost:8080' });
+
+  React.useEffect(() => {
+    client.get('/weather')
+      .then((response) => {
+        console.log(response);
+        return response.data;
+      })
+      .then((data) => { setState(data); });
+  }, []);
+
+  React.useEffect(() => {
+    if (!position) return;
+  }, [position]);
+
+  React.useEffect(() => {
+    if (onWeatherChange) onWeatherChange(state);
+  }, [state]);
+
   if (state) {
     return (
       <div>
